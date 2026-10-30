@@ -1,0 +1,1092 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The Gate Doesn’t Lie</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<style>
+/* Layout: a full-screen show, one idea per screen. Committed single look: the gym floor at night (ink) lit by gate-green, with orange as the alarm colour, alternating with paper screens. */
+:root{
+  color-scheme:dark;
+  --ink:#0F1218;--ink-2:#181C24;--ink-3:#232A37;--line-d:#2F3747;--muted:#B9C0CB;--dim:#8A92A0;
+  --paper:#F3F1EA;--paper-2:#FFFFFC;--line-l:#E2DED2;--body-l:#4A5260;--dim-l:#5E6672;
+  --lime:#C6F432;--lime-d:#4A6600;--orange:#FF7A3D;--orange-d:#C4471A;
+  --display:'Oswald','Arial Narrow',Arial,sans-serif;
+  --body:'DM Sans','Helvetica Neue',Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--ink);color:var(--paper);font-family:var(--body);overflow:hidden;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,ul,ol{margin:0}
+ul{padding-left:1.15em}
+a{color:inherit}
+
+/* ---------- stage ---------- */
+.deck{position:fixed;inset:0}
+.slide{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+  padding-block:clamp(64px,11vh,104px) clamp(92px,13vh,124px);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  opacity:0;visibility:hidden;transform:translateX(48px);
+  transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1),visibility 0s linear .7s;scrollbar-width:thin}
+.slide.past{transform:translateX(-48px)}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1),visibility 0s}
+.wrap{max-width:1440px;min-height:100%;margin-inline:auto;padding-inline:clamp(0px,3.5vw,56px);display:flex;flex-direction:column;justify-content:center;gap:clamp(16px,3.2vh,34px)}
+.dark{background:radial-gradient(circle at 78% 40%,#283246,var(--ink) 62%);color:var(--paper)}
+.light{background:radial-gradient(circle at 85% 12%,#FFFFFF,var(--paper) 58%);color:var(--ink)}
+.lime{background:radial-gradient(circle at 80% 30%,#E4FF8A,var(--lime) 45%,#A8D11E);color:var(--ink)}
+
+/* ---------- type ---------- */
+.head{display:flex;flex-direction:column;gap:clamp(8px,1.4vh,14px);min-width:0}
+.eyebrow{font-size:clamp(12px,1vw,15px);letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--lime)}
+.light .eyebrow{color:var(--lime-d)}
+.lime .eyebrow{color:var(--ink)}
+.h1{font-family:var(--display);font-weight:700;text-transform:uppercase;line-height:.98;font-size:clamp(46px,min(7.6vw,12.5vh),132px);text-wrap:balance;letter-spacing:.005em}
+.h2{font-family:var(--display);font-weight:600;text-transform:uppercase;line-height:1.04;font-size:clamp(30px,min(4.3vw,7vh),66px);text-wrap:balance;max-width:24ch}
+.h3{font-size:clamp(16px,min(1.45vw,2.5vh),23px);font-weight:700;line-height:1.25}
+.h3.big{font-family:var(--display);font-weight:600;text-transform:uppercase;font-size:clamp(22px,min(2.3vw,3.8vh),36px);letter-spacing:.01em}
+.lead{font-size:clamp(17px,min(1.6vw,2.7vh),25px);line-height:1.4;color:var(--muted);max-width:58ch}
+.light .lead{color:#3A414D}
+.lime .lead{color:var(--ink)}
+.p{font-size:clamp(14px,min(1.1vw,1.95vh),18px);line-height:1.42;color:var(--muted)}
+.light .p,.light li{color:var(--body-l)}
+.dark li{color:var(--muted)}
+li{font-size:clamp(14px,min(1.1vw,1.95vh),18px);line-height:1.5}
+.src{font-size:13px;line-height:1.4;color:var(--dim)}
+.light .src{color:var(--dim-l)}
+.num{font-family:var(--display);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.svgt{font-family:var(--display);font-weight:700}
+.svgs{font-family:var(--body);font-weight:700}
+
+/* ---------- layout helpers ---------- */
+.split{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(20px,3.2vw,60px);align-items:center}
+.split.wide{grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr)}
+.split.rev{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
+.row{display:grid;gap:clamp(12px,1.5vw,24px);grid-template-columns:repeat(var(--n,3),minmax(0,1fr))}
+.stack{display:flex;flex-direction:column;gap:clamp(12px,2.2vh,22px);min-width:0}
+.art{min-width:0}
+.art svg{display:block;width:100%;height:auto;max-height:min(58vh,600px);margin-inline:auto;overflow:visible}
+.art.s svg{max-height:min(34vh,340px)}
+.art.m svg{max-height:min(46vh,480px)}
+@media (max-width:980px){
+  .split,.split.wide,.split.rev{grid-template-columns:1fr}
+  .row{grid-template-columns:repeat(min(var(--n,3),2),minmax(0,1fr))}
+  .art svg{max-height:42vh}
+}
+@media (max-width:560px){.row{grid-template-columns:1fr}}
+
+/* ---------- surfaces ---------- */
+.card{border-radius:20px;padding:clamp(16px,1.8vw,28px);display:flex;flex-direction:column;gap:10px;min-width:0}
+.dark .card{background:linear-gradient(160deg,#232A37,#151920);border:1px solid var(--line-d);box-shadow:0 24px 48px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.07)}
+.light .card{background:linear-gradient(160deg,#FFFFFF,#F2EFE6);border:1px solid var(--line-l);box-shadow:0 20px 40px rgba(15,18,24,.12),inset 0 1px 0 #fff}
+.card.h{flex-direction:row;align-items:center;gap:clamp(14px,1.6vw,24px)}
+.card.inv{background:linear-gradient(160deg,#232A37,#0F1218)!important;border-color:var(--line-d)!important;color:var(--paper)}
+.card.inv .p,.card.inv li{color:var(--muted)}
+.edge-l{box-shadow:inset 6px 0 0 var(--lime),0 24px 48px rgba(0,0,0,.42)!important}
+.edge-o{box-shadow:inset 6px 0 0 var(--orange),0 24px 48px rgba(0,0,0,.42)!important}
+.ic{display:inline-grid;place-items:center;line-height:0}
+.ic svg{width:1.2em;height:1.2em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tile{flex:none;width:clamp(44px,3.8vw,60px);aspect-ratio:1;border-radius:16px;display:grid;place-items:center;box-shadow:0 12px 24px rgba(15,18,24,.3),inset 0 2px 0 rgba(255,255,255,.35)}
+.tile .ic svg{width:clamp(22px,1.9vw,30px);height:clamp(22px,1.9vw,30px)}
+.t-or{background:linear-gradient(145deg,#FFA477,#E0561C);color:#fff}
+.t-lime{background:linear-gradient(145deg,#E4FF8A,#8FB52A);color:var(--ink)}
+.t-ink{background:linear-gradient(145deg,#4A5670,#161A22);color:var(--lime)}
+.t-slate{background:linear-gradient(145deg,#7D8DAD,#3E4A63);color:#fff}
+.t-paper{background:linear-gradient(145deg,#FFFFFF,#CFCABD);color:var(--ink)}
+.t-ig{background:linear-gradient(145deg,#FFB86B,#E1306C 55%,#833AB4);color:#fff}
+.t-li{background:linear-gradient(145deg,#4FA3EC,#0A66C2);color:#fff}
+.t-fb{background:linear-gradient(145deg,#6FA2F7,#1859D1);color:#fff}
+.t-go{background:linear-gradient(145deg,#FFD66B,#E8920F);color:var(--ink)}
+.t-wa{background:linear-gradient(145deg,#6BE89A,#1DA851);color:#fff}
+.t-yt{background:linear-gradient(145deg,#FF7A7A,#C4161C);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{display:inline-flex;align-items:center;gap:8px;font-size:clamp(13px,1vw,16px);font-weight:700;padding:8px 14px;border-radius:999px;border:1px solid var(--line-d);background:#1E2430;color:var(--paper)}
+.light .chip{background:var(--paper-2);border-color:var(--line-l);color:var(--ink)}
+.chip.lime{background:var(--lime);border-color:var(--lime);color:var(--ink)}
+.chip.no{color:var(--muted)}
+.chip.no .ic{color:var(--orange)}
+.pill{display:inline-flex;align-items:center;gap:10px;font-size:clamp(14px,1.15vw,18px);font-weight:500;padding:12px 20px;border-radius:999px;background:linear-gradient(160deg,#232A37,#151920);border:1px solid var(--line-d);box-shadow:0 18px 36px rgba(0,0,0,.4);width:fit-content;max-width:100%}
+.pill.lime{background:linear-gradient(145deg,#E4FF8A,#A8D11E);border-color:transparent;color:var(--ink);font-weight:700}
+
+/* ---------- motion ---------- */
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{opacity:0;transform:scale(.82)}70%{opacity:1;transform:scale(1.035)}100%{opacity:1;transform:none}}
+@keyframes left{from{opacity:0;transform:translateX(-44px)}to{opacity:1;transform:none}}
+@keyframes right{from{opacity:0;transform:translateX(44px)}to{opacity:1;transform:none}}
+@keyframes drop{from{opacity:0;transform:translateY(-70px)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleY(0)}to{transform:none}}
+@keyframes growx{from{transform:scaleX(0)}to{transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes zoom{from{opacity:0;transform:scale(1.12)}to{opacity:1;transform:none}}
+.slide.active .a{animation:rise .8s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d,0) * 130ms + 150ms)}
+.slide.active .a.pop{animation-name:pop}
+.slide.active .a.left{animation-name:left}
+.slide.active .a.right{animation-name:right}
+.slide.active .a.drop{animation-name:drop;animation-timing-function:cubic-bezier(.3,1.4,.5,1)}
+.slide.active .a.fade{animation-name:fade;animation-duration:1.1s}
+.slide.active .a.zoom{animation-name:zoom;animation-duration:1s}
+.slide.active .a.grow{animation-name:grow;animation-duration:1s}
+.slide.active .a.growx{animation-name:growx;animation-duration:1.1s}
+.grow{transform-box:fill-box;transform-origin:50% 100%}
+.growx{transform-origin:0 50%}
+svg g.a{transform-box:fill-box;transform-origin:50% 50%}
+svg g.a.grow{transform-origin:50% 100%}
+
+.pulse{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+.bob{animation:bob 4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.scan{animation:scan 2.4s ease-in-out infinite}
+@keyframes scan{0%,100%{transform:translateY(-44px)}50%{transform:translateY(44px)}}
+.dash{stroke-dasharray:14 12;animation:dash 1.2s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-26}}
+.glass{animation:glass 3s ease-in-out infinite}
+@keyframes glass{0%,100%{opacity:.55}50%{opacity:.95}}
+.float{animation:float 5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-10px) rotate(-1deg)}}
+
+/* ---------- live gate panel ---------- */
+.gatecard{border-radius:28px;background:linear-gradient(160deg,#232A37,#0F1218);box-shadow:0 34px 64px rgba(15,18,24,.45),inset 0 1px 0 rgba(255,255,255,.1);padding:clamp(18px,2vw,28px);color:var(--paper);display:flex;flex-direction:column;gap:16px;max-width:460px;width:100%;margin-inline:auto}
+.gc-top{display:flex;justify-content:space-between;align-items:center;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);font-weight:700}
+.gc-dot{width:16px;height:16px;border-radius:50%;animation:gcdot 6s infinite}
+@keyframes gcdot{0%,46%{background:var(--lime);box-shadow:0 0 18px var(--lime)}50%,96%{background:var(--orange);box-shadow:0 0 18px var(--orange)}100%{background:var(--lime)}}
+.gc-face{width:min(220px,62%);margin-inline:auto;display:block;height:auto}
+.gc-ring{animation:gcring 6s infinite}
+@keyframes gcring{0%,46%{stroke:var(--lime)}50%,96%{stroke:var(--orange)}100%{stroke:var(--lime)}}
+.gc-scan{animation:gcscan 2s ease-in-out infinite}
+@keyframes gcscan{0%,100%{transform:translateY(60px)}50%{transform:translateY(185px)}}
+.gc-states{position:relative;min-height:118px}
+.gc-st{position:absolute;inset:0;border-radius:18px;padding:16px 20px;display:flex;flex-direction:column;gap:6px;justify-content:center}
+.gc-st b{font-family:var(--display);font-size:clamp(22px,2.1vw,32px);letter-spacing:.04em;text-transform:uppercase;display:flex;gap:10px;align-items:center}
+.gc-st span{font-size:15px;line-height:1.4;color:var(--muted)}
+.gc-a{background:rgba(198,244,50,.12);border:2px solid var(--lime);animation:gca 6s infinite}
+.gc-a b{color:var(--lime)}
+.gc-b{background:rgba(255,122,61,.12);border:2px solid var(--orange);animation:gcb 6s infinite}
+.gc-b b{color:var(--orange)}
+@keyframes gca{0%,44%{opacity:1}50%,94%{opacity:0}100%{opacity:1}}
+@keyframes gcb{0%,44%{opacity:0}50%,94%{opacity:1}100%{opacity:0}}
+
+/* ---------- infrastructure layers ---------- */
+.layers{display:flex;flex-direction:column;gap:clamp(8px,1.3vh,14px);min-width:0}
+.layer{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(12px,1.4vw,20px);align-items:center;padding:clamp(10px,1.4vh,16px) clamp(14px,1.4vw,20px);border-radius:16px;background:linear-gradient(160deg,#232A37,#151920);border:1px solid var(--line-d)}
+.layer .tile{width:clamp(40px,3.2vw,52px);border-radius:14px}
+.layer .tile .ic svg{width:clamp(20px,1.6vw,26px);height:clamp(20px,1.6vw,26px)}
+.layer .lname{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.layer .lk{font-size:12px;letter-spacing:.18em;font-weight:700;color:var(--dim)}
+.layer .h3{font-size:clamp(15px,min(1.3vw,2.3vh),20px)}
+.layer .p{font-size:clamp(13px,min(1vw,1.8vh),16px)}
+
+/* ---------- connected journey ---------- */
+.flow{--dot:clamp(50px,4.4vw,68px);position:relative;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(8px,1vw,16px)}
+.flow::before{content:"";position:absolute;left:calc(100% / 14);right:calc(100% / 14);top:calc(var(--dot) / 2 - 2px);height:4px;border-radius:4px;background:linear-gradient(90deg,var(--lime),#8FB52A 60%,var(--orange))}
+.runner{position:absolute;top:calc(var(--dot) / 2 - 8px);left:calc(100% / 14);width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 0 18px 6px var(--lime);animation:run 6s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes run{from{left:calc(100% / 14 - 8px)}to{left:calc(100% - 100% / 14 - 8px)}}
+.node{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;min-width:0}
+.node .dotc{width:var(--dot);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;color:var(--ink);background:radial-gradient(circle at 35% 30%,#F0FFB8,var(--lime) 45%,#7A9A14);box-shadow:0 0 0 6px var(--ink),0 16px 28px rgba(0,0,0,.5)}
+.node .dotc.or{background:radial-gradient(circle at 35% 30%,#FFC4A4,var(--orange) 45%,var(--orange-d))}
+.node .dotc .ic svg{width:44%;height:44%}
+.node .k{font-size:12px;letter-spacing:.18em;font-weight:700;color:var(--lime)}
+.node .h3{font-size:clamp(14px,min(1.15vw,2.2vh),18px)}
+.node .p{font-size:clamp(12.5px,min(.95vw,1.8vh),15px)}
+@media (max-width:980px){
+  .flow{grid-template-columns:1fr;gap:14px}
+  .flow::before{left:calc(var(--dot) / 2 - 2px);right:auto;width:4px;height:auto;top:calc(var(--dot) / 2);bottom:calc(var(--dot) / 2);background:linear-gradient(180deg,var(--lime),#8FB52A 60%,var(--orange))}
+  .runner{left:calc(var(--dot) / 2 - 8px);animation-name:runv}
+  .node{display:grid;grid-template-columns:var(--dot) minmax(0,1fr);text-align:left;align-items:center;column-gap:16px}
+  .node .txt{display:flex;flex-direction:column;gap:4px}
+}
+@keyframes runv{from{top:calc(var(--dot) / 2 - 8px)}to{top:calc(100% - var(--dot) / 2 - 8px)}}
+.node .txt{display:flex;flex-direction:column;gap:6px;min-width:0}
+
+/* ---------- misc components ---------- */
+.stat{display:flex;flex-direction:column;gap:4px;border-left:8px solid var(--lime);padding:2px 0 2px 22px}
+.stat .num{font-size:clamp(46px,min(5.6vw,9vh),96px)}
+.mix{display:flex;border-radius:14px;overflow:hidden;box-shadow:0 18px 36px rgba(15,18,24,.18)}
+.mix span{padding:14px 16px;font-weight:700;font-size:clamp(13px,1.05vw,17px);box-shadow:inset 0 6px 0 rgba(255,255,255,.3),inset 0 -8px 0 rgba(0,0,0,.18);min-width:0}
+@media (max-width:560px){.mix{flex-direction:column}.mix span{flex:1 1 auto!important}}
+.kpi{width:100%;border-collapse:collapse;font-size:clamp(14px,1.15vw,18px)}
+.kpi th{background:var(--ink);color:var(--paper);text-align:left;padding:12px 16px;font-weight:700}
+.kpi td{padding:12px 16px;border-top:1px solid var(--line-l);color:var(--ink)}
+.kpi tr:nth-child(even) td{background:#E9E6DC}
+.kpi td:last-child{font-weight:700;color:var(--lime-d);white-space:nowrap;font-variant-numeric:tabular-nums}
+.ms{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center}
+.ball{width:clamp(48px,4.4vw,72px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;color:var(--ink);background:radial-gradient(circle at 35% 30%,#F0FFB8,var(--lime) 45%,#7A9A14);box-shadow:0 14px 28px rgba(120,160,20,.4),inset 0 -4px 0 rgba(15,18,24,.15)}
+.ball.or{background:radial-gradient(circle at 35% 30%,#FFC4A4,var(--orange) 45%,var(--orange-d));box-shadow:0 14px 28px rgba(224,86,28,.4)}
+.ball .ic svg{width:46%;height:46%}
+.ms .num{font-size:clamp(26px,min(2.6vw,4.4vh),42px);color:var(--lime-d)}
+.stairs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,2vw,32px);align-items:end}
+.stair{display:flex;flex-direction:column;gap:12px;min-width:0}
+.stair svg{width:100%;height:auto;display:block}
+@media (max-width:980px){.stairs{grid-template-columns:1fr}.stair svg{max-width:340px}}
+.pkg .price{font-family:var(--display);font-weight:700;font-size:clamp(28px,min(2.7vw,4.6vh),44px);line-height:1.05}
+.pkg .price small{font-size:.5em;color:var(--dim-l);font-weight:500}
+.pkg.inv .price small{color:var(--dim)}
+.spend{border-radius:14px;padding:12px 16px;display:flex;flex-direction:column;gap:4px;background:#E9E6DC}
+.spend p{font-size:clamp(13px,1vw,16px);line-height:1.45}
+.spend .lbl{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700}
+.pkg.inv .spend{background:#1E2430;border:1px solid var(--line-d)}
+.pkg.rec{outline:2px solid var(--lime);box-shadow:0 0 0 7px rgba(198,244,50,.25),0 34px 64px rgba(15,18,24,.32)!important}
+.badge{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;background:var(--lime);color:var(--ink);padding:6px 12px;border-radius:999px}
+.btn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:clamp(14px,1.1vw,17px);padding:13px 22px;border-radius:999px;background:linear-gradient(145deg,#E4FF8A,#A8D11E);color:var(--ink);box-shadow:0 14px 30px rgba(120,160,20,.35)}
+.btn.ghost{background:transparent;color:var(--paper);border:1px solid var(--line-d);box-shadow:none}
+.btn:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+.selectable{user-select:all}
+
+/* ---------- chrome ---------- */
+.chrome{position:fixed;z-index:20;display:flex;align-items:center;gap:8px;background:rgba(15,18,24,.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1);border-radius:999px;color:var(--paper)}
+.brand{top:calc(12px + env(safe-area-inset-top,0px));left:max(16px,calc(env(safe-area-inset-left,0px) + 12px));padding:8px 14px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700}
+.brand i{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime)}
+.hint{top:calc(12px + env(safe-area-inset-top,0px));right:max(16px,calc(env(safe-area-inset-right,0px) + 12px));padding:8px 14px;font-size:12px;color:var(--muted);transition:opacity .6s}
+.hint.gone{opacity:0;pointer-events:none}
+.nav{left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));padding:6px;gap:4px;max-width:calc(100% - 24px);box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.nav button{all:unset;cursor:pointer;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--paper)}
+.nav button:hover{background:rgba(255,255,255,.1)}
+.nav button:focus-visible,.dots button:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+.nav .play{background:var(--lime);color:var(--ink)}
+.nav .play:hover{background:#D9FF6A}
+.dots{display:flex;gap:6px;padding-inline:6px;align-items:center}
+.dots button{all:unset;cursor:pointer;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.28);transition:width .3s,background .3s}
+.dots button[aria-current="true"]{background:var(--lime);width:22px;border-radius:6px}
+.count{font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted);padding-inline:8px;min-width:58px;text-align:center}
+.bar{position:fixed;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.08);z-index:21}
+.bar i{display:block;height:100%;width:0;background:var(--lime);box-shadow:0 0 10px var(--lime)}
+@media (max-width:820px){.dots{display:none}}
+@media (max-width:560px){.hint{display:none}.brand{font-size:11px}}
+
+@media (prefers-reduced-motion:reduce){
+  .slide{transition:opacity .2s linear,visibility 0s linear .2s;transform:none!important}
+  .slide.active{transition:opacity .2s linear}
+  .slide.active .a,.pulse,.bob,.scan,.dash,.glass,.float,.runner,.gc-dot,.gc-ring,.gc-scan{animation:none!important}
+  .gc-b{display:none}
+}
+</style>
+
+<!-- shared gradients and shapes -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="gPl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2E3646"/><stop offset="1" stop-color="#161A22"/></linearGradient>
+<linearGradient id="gPr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4A5670"/><stop offset="1" stop-color="#262C38"/></linearGradient>
+<linearGradient id="gGl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C6F432" stop-opacity=".85"/><stop offset="1" stop-color="#C6F432" stop-opacity=".15"/></linearGradient>
+<radialGradient id="gGlow"><stop offset="0" stop-color="#C6F432" stop-opacity=".4"/><stop offset="1" stop-color="#C6F432" stop-opacity="0"/></radialGradient>
+<radialGradient id="gGlowO"><stop offset="0" stop-color="#FF7A3D" stop-opacity=".5"/><stop offset="1" stop-color="#FF7A3D" stop-opacity="0"/></radialGradient>
+<filter id="fBlur" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+<linearGradient id="gSf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#46516A"/><stop offset="1" stop-color="#232936"/></linearGradient>
+<linearGradient id="gSs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#262C38"/><stop offset="1" stop-color="#11141A"/></linearGradient>
+<linearGradient id="gCoin" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE9A8"/><stop offset="1" stop-color="#E0A82E"/></linearGradient>
+<g id="coin"><ellipse cy="8" rx="34" ry="13" fill="#B07A14"/><rect x="-34" y="0" width="68" height="8" fill="#C98E1C"/><ellipse rx="34" ry="13" fill="url(#gCoin)" stroke="#FFF1C4" stroke-width="1.5"/><ellipse rx="22" ry="8" fill="none" stroke="#C98E1C" stroke-width="2"/></g>
+<linearGradient id="gB1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#B4E022"/><stop offset=".5" stop-color="#D4FB60"/><stop offset="1" stop-color="#A8D11E"/></linearGradient>
+<linearGradient id="gB2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#F06A2C"/><stop offset=".5" stop-color="#FF9A66"/><stop offset="1" stop-color="#E95F22"/></linearGradient>
+<linearGradient id="gB3" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#262C38"/><stop offset=".5" stop-color="#46516A"/><stop offset="1" stop-color="#232936"/></linearGradient>
+<linearGradient id="gMap" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2E3748"/><stop offset="1" stop-color="#1A1F29"/></linearGradient>
+<radialGradient id="gRL"><stop offset="0" stop-color="#C6F432" stop-opacity=".55"/><stop offset="1" stop-color="#C6F432" stop-opacity="0"/></radialGradient>
+<linearGradient id="gPinL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E4FF8A"/><stop offset="1" stop-color="#8FB52A"/></linearGradient>
+<linearGradient id="gPinO" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB892"/><stop offset="1" stop-color="#E0561C"/></linearGradient>
+<path id="pin" d="M35 98 C35 98 4 58 4 35 A31 31 0 1 1 66 35 C66 58 35 98 35 98Z"/>
+<linearGradient id="gFu1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6E8C10"/><stop offset=".45" stop-color="#E4FF8A"/><stop offset="1" stop-color="#7A9A14"/></linearGradient>
+<linearGradient id="gFu2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5E7A0C"/><stop offset=".45" stop-color="#D4FB60"/><stop offset="1" stop-color="#6E8C10"/></linearGradient>
+<linearGradient id="gFu3" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4E660A"/><stop offset=".45" stop-color="#B4E022"/><stop offset="1" stop-color="#5E7A0C"/></linearGradient>
+<linearGradient id="gFu4" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9A3812"/><stop offset=".45" stop-color="#FFB08A"/><stop offset="1" stop-color="#B8481A"/></linearGradient>
+<radialGradient id="gFuIn" cx=".5" cy=".3"><stop offset="0" stop-color="#2A3140"/><stop offset="1" stop-color="#0B0E13"/></radialGradient>
+<linearGradient id="gSt1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B4E022"/><stop offset="1" stop-color="#6E8C10"/></linearGradient>
+<linearGradient id="gSt2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D4FB60"/><stop offset="1" stop-color="#7A9A14"/></linearGradient>
+<linearGradient id="gSt3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF9A66"/><stop offset="1" stop-color="#C4471A"/></linearGradient>
+<radialGradient id="gMed" cx=".35" cy=".3"><stop offset="0" stop-color="#F0FFB8"/><stop offset=".5" stop-color="#C6F432"/><stop offset="1" stop-color="#9CC21F"/></radialGradient>
+<linearGradient id="gPh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2E3A50"/><stop offset=".6" stop-color="#1A2030"/><stop offset="1" stop-color="#0F1218"/></linearGradient>
+</defs>
+</svg>
+
+<div class="chrome brand" aria-hidden="true"><i></i>Mastech × Fitness Marvel</div>
+<div class="chrome hint" id="hint">Use ← → keys, scroll or swipe</div>
+
+<main class="deck" id="deck">
+
+<!-- 1 · Cover -->
+<section class="slide dark active" data-t="9000" aria-label="Cover">
+<div class="wrap">
+<div class="split">
+<div class="stack">
+<p class="eyebrow a fade" style="--d:0">Mastech × Fitness Marvel · Social media growth pitch</p>
+<h1 class="h1 a" style="--d:1">The gate doesn’t lie.</h1>
+<p class="lead a" style="--d:2">A social media campaign that puts Fitness Marvel inside Pakistan’s elite gyms, and keeps it there.</p>
+<p class="pill lime a pop" style="--d:4"><span class="ic" data-i="layers"></span>Fitness Marvel: the one-stop infrastructure an elite gym runs on</p>
+<p class="src a fade" style="--d:5">Karachi · Lahore · Islamabad · October 2026 · mastechz.com</p>
+</div>
+<div class="art a zoom" style="--d:2" data-gate="cover"></div>
+</div>
+</div>
+</section>
+
+<!-- 2 · The leak -->
+<section class="slide light" data-t="11000" aria-label="The pain we sell against">
+<div class="wrap">
+<div class="split wide">
+<div class="head">
+<p class="eyebrow a fade" style="--d:0">The pain we sell against</p>
+<h2 class="h2 a" style="--d:1">Elite gyms leak money at their own front door</h2>
+<p class="lead a" style="--d:2">Owners <b>feel</b> it. Few can <b>prove</b> it. Fitness Marvel proves it, and our campaign makes every owner <b>see</b> it.</p>
+</div>
+<div class="art s a pop" style="--d:3">
+<svg viewBox="0 0 520 520" role="img" aria-label="3D safe with its door open and gold coins spilling onto the floor">
+<ellipse cx="270" cy="470" rx="240" ry="36" fill="#0F1218" opacity=".22" filter="url(#fBlur)"/>
+<polygon points="120,150 180,110 420,110 360,150" fill="#6A7690"/>
+<rect x="120" y="150" width="240" height="270" rx="8" fill="url(#gSf)"/>
+<polygon points="360,150 420,110 420,380 360,420" fill="url(#gSs)"/>
+<rect x="150" y="182" width="180" height="206" rx="6" fill="#0B0E13"/>
+<use href="#coin" x="200" y="360"/><use href="#coin" x="270" y="366"/>
+<polygon points="150,182 64,220 64,428 150,390" fill="url(#gSf)" stroke="#6A7690" stroke-width="2"/>
+<ellipse cx="106" cy="300" rx="17" ry="24" fill="#262C38" stroke="#FF7A3D" stroke-width="4"/>
+<line x1="106" y1="300" x2="106" y2="284" stroke="#FF7A3D" stroke-width="4" stroke-linecap="round"/>
+<g transform="translate(250,410) rotate(-18)"><use href="#coin"/></g>
+<g transform="translate(320,438) rotate(14)"><use href="#coin"/></g>
+<use href="#coin" x="240" y="462"/>
+<use href="#coin" x="410" y="460"/><use href="#coin" x="410" y="446"/><use href="#coin" x="410" y="432"/>
+<g transform="translate(470,380) rotate(30)"><use href="#coin"/></g>
+<g class="pulse"><circle cx="440" cy="80" r="32" fill="#FF7A3D"/><line x1="440" y1="62" x2="440" y2="86" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round"/><circle cx="440" cy="100" r="4.5" fill="#FFFFFF"/></g>
+</svg>
+</div>
+</div>
+<div class="row" style="--n:4">
+<div class="card a" style="--d:4"><span class="tile t-or"><span class="ic" data-i="users"></span></span><h3 class="h3">Buddy entries</h3><p class="p">One card, two people. One of them trains free.</p></div>
+<div class="card a" style="--d:5"><span class="tile t-or"><span class="ic" data-i="clock"></span></span><h3 class="h3">Expired, still training</h3><p class="p">Memberships lapse and nobody stops them at the door.</p></div>
+<div class="card a" style="--d:6"><span class="tile t-or"><span class="ic" data-i="warn"></span></span><h3 class="h3">Desk-side deals</h3><p class="p">Cash fees and quiet discounts the owner never sees.</p></div>
+<div class="card a" style="--d:7"><span class="tile t-or"><span class="ic" data-i="activity"></span></span><h3 class="h3">Silent churn</h3><p class="p">No reminder, no follow-up. The member just stops paying.</p></div>
+</div>
+</div>
+</section>
+
+<!-- 3 · Infrastructure -->
+<section class="slide dark" data-t="14000" aria-label="Fitness Marvel as gym infrastructure">
+<div class="wrap">
+<div class="head">
+<p class="eyebrow a fade" style="--d:0">What we are selling</p>
+<h2 class="h2 a" style="--d:1;max-width:30ch">Not one piece of software. The infrastructure an elite gym runs on.</h2>
+<p class="lead a" style="--d:2">Fitness Marvel builds the hardware, software, apps and AI together, so every layer talks to every other. One system, one login and one support team, from the gate to the owner’s phone.</p>
+</div>
+<div class="split rev">
+<div class="art m"><svg id="stack" viewBox="0 0 520 590" role="img" aria-label="Five 3D layers stacked like a server rack: access hardware at the bottom, then core operations, member experience, intelligence, and network and compliance on top"></svg></div>
+<div class="layers">
+<div class="layer a right" style="--d:8"><span class="tile t-paper"><span class="ic" data-i="branch"></span></span><div class="stack" style="gap:2px"><div class="lname"><span class="lk">LAYER 5</span><h3 class="h3">Network and compliance</h3></div><p class="p">Multi-branch control · Privilege Membership · SRB tax integration · branch reports</p></div></div>
+<div class="layer a right" style="--d:7"><span class="tile t-or"><span class="ic" data-i="bolt"></span></span><div class="stack" style="gap:2px"><div class="lname"><span class="lk">LAYER 4</span><h3 class="h3">Intelligence</h3></div><p class="p">Horizon AI assistant · Smart Search · WhatsApp Smart Communication · Anti-Cheat</p></div></div>
+<div class="layer a right" style="--d:6"><span class="tile t-lime"><span class="ic" data-i="phone"></span></span><div class="stack" style="gap:2px"><div class="lname"><span class="lk">LAYER 3</span><h3 class="h3">Member experience</h3></div><p class="p">FIT PAL member app · trainer app · self-service kiosk · AI diet and workout plans</p></div></div>
+<div class="layer a right" style="--d:5"><span class="tile t-slate"><span class="ic" data-i="dash"></span></span><div class="stack" style="gap:2px"><div class="lname"><span class="lk">LAYER 2</span><h3 class="h3">Core operations</h3></div><p class="p">Members · billing and renewals · attendance · classes · staff permissions</p></div></div>
+<div class="layer a right" style="--d:4"><span class="tile t-ink"><span class="ic" data-i="gate"></span></span><div class="stack" style="gap:2px"><div class="lname"><span class="lk">LAYER 1</span><h3 class="h3">Access hardware</h3></div><p class="p">Smart gates · AI face entry at 99.7% accuracy · fingerprint · RFID cards</p></div></div>
+</div>
+</div>
+<div class="chips a" style="--d:9">
+<span class="chip lime"><span class="ic" data-i="lock"></span>Protect revenue</span>
+<span class="chip lime"><span class="ic" data-i="wallet"></span>Earn more</span>
+<span class="chip lime"><span class="ic" data-i="dash"></span>Stay in control</span>
+<span class="src" style="align-self:center">Anti-Cheat, Horizon Assistant and tax integration are optional add-ons. Source: fitnessmarvel.com</span>
+</div>
+</div>
+</section>
+
+<!-- 4 · Connected journey -->
+<section class="slide dark" data-t="14000" aria-label="One connected member journey">
+<div class="wrap">
+<div class="head">
+<p class="eyebrow a fade" style="--d:0">How the layers work together</p>
+<h2 class="h2 a" style="--d:1">One member. One connected journey.</h2>
+<p class="lead a" style="--d:2">Every step below happens inside one system. Nothing is typed twice and nothing has to be synced between tools.</p>
+</div>
+<div class="flow">
+<span class="runner" aria-hidden="true"></span>
+<div class="node a pop" style="--d:3"><span class="dotc"><span class="ic" data-i="kiosk"></span></span><div class="txt"><span class="k">01</span><h3 class="h3">Joins at the kiosk</h3><p class="p">Picks a plan and pays. The invoice is SRB-ready.</p></div></div>
+<div class="node a pop" style="--d:4"><span class="dotc"><span class="ic" data-i="face"></span></span><div class="txt"><span class="k">02</span><h3 class="h3">Face enrolled once</h3><p class="p">Synced to every gate in every approved branch.</p></div></div>
+<div class="node a pop" style="--d:5"><span class="dotc"><span class="ic" data-i="gate"></span></span><div class="txt"><span class="k">03</span><h3 class="h3">Gate checks live status</h3><p class="p">Opens in under a second, for active members only.</p></div></div>
+<div class="node a pop" style="--d:6"><span class="dotc"><span class="ic" data-i="activity"></span></span><div class="txt"><span class="k">04</span><h3 class="h3">Visit logged</h3><p class="p">Attendance and entry image land on the dashboard.</p></div></div>
+<div class="node a pop" style="--d:7"><span class="dotc"><span class="ic" data-i="chat"></span></span><div class="txt"><span class="k">05</span><h3 class="h3">Renewal nudge</h3><p class="p">A WhatsApp reminder goes out before expiry.</p></div></div>
+<div class="node a pop" style="--d:8"><span class="dotc"><span class="ic" data-i="phone"></span></span><div class="txt"><span class="k">06</span><h3 class="h3">Renews in the app</h3><p class="p">FIT PAL app or kiosk, with upgrades and add-ons.</p></div></div>
+<div class="node a pop" style="--d:9"><span class="dotc or"><span class="ic" data-i="dash"></span></span><div class="txt"><span class="k" style="color:var(--orange)">07</span><h3 class="h3">Owner sees it all</h3><p class="p">Revenue, renewals and every branch on one screen.</p></div></div>
+</div>
+<div class="chips a" style="--d:10">
+<span class="chip" style="background:transparent;border-color:transparent;padding-left:0">Replaces the usual patchwork:</span>
+<span class="chip no"><span class="ic" data-i="x"></span>Biometric machine</span>
+<span class="chip no"><span class="ic" data-i="x"></span>Billing software</span>
+<span class="chip no"><span class="ic" data-i="x"></span>Spreadsheets</span>
+<span class="chip no"><span class="ic" data-i="x"></span>Separate gate installer</span>
+<span class="chip no"><span class="ic" data-i="x"></span>Manual WhatsApp</span>
+<span class="chip lime"><span class="ic" data-i="check"></span>One Fitness Marvel system</span>
+</div>
+</div>
+</section>
+
+<!-- 5 · Audience -->
+<section class="slide light" data-t="11000" aria-label="The opportunity">
+<div class="wrap">
+<div class="head">
+<p class="eyebrow a fade" style="--d:0">The opportunity</p>
+<h2 class="h2 a" style="--d:1">The owners we need are already scrolling</h2>
+</div>
+<div class="split">
+<div class="art m">
+<svg viewBox="0 0 820 540" role="img" aria-label="Three 3D bars: Facebook tallest at 66 million users, Instagram at 26.3 million, LinkedIn shortest at 15 million">
+<ellipse cx="410" cy="490" rx="400" ry="24" fill="#0F1218" opacity=".2" filter="url(#fBlur)"/>
+<g transform="translate(60,76)"><g class="a grow" style="--d:3"><polygon points="0,24 40,0 200,0 160,24" fill="#E4FF8A"/><rect x="0" y="24" width="160" height="380" fill="url(#gB1)"/><polygon points="160,24 200,0 200,380 160,404" fill="#7A9A14"/><rect x="14" y="40" width="10" height="348" rx="5" fill="#FFFFFF" opacity=".45"/></g></g>
+<g transform="translate(320,304)"><g class="a grow" style="--d:4"><polygon points="0,24 40,0 200,0 160,24" fill="#FFB892"/><rect x="0" y="24" width="160" height="152" fill="url(#gB2)"/><polygon points="160,24 200,0 200,152 160,176" fill="#B8481A"/><rect x="14" y="40" width="10" height="120" rx="5" fill="#FFFFFF" opacity=".4"/></g></g>
+<g transform="translate(580,370)"><g class="a grow" style="--d:5"><polygon points="0,24 40,0 200,0 160,24" fill="#6A7690"/><rect x="0" y="24" width="160" height="86" fill="url(#gB3)"/><polygon points="160,24 200,0 200,86 160,110" fill="#11141A"/><rect x="14" y="40" width="10" height="56" rx="5" fill="#FFFFFF" opacity=".25"/></g></g>
+<text class="svgs" x="140" y="526" text-anchor="middle" font-size="24" fill="#0F1218">Facebook</text>
+<text class="svgs" x="400" y="526" text-anchor="middle" font-size="24" fill="#0F1218">Instagram</text>
+<text class="svgs" x="660" y="526" text-anchor="middle" font-size="24" fill="#0F1218">LinkedIn</text>
+</svg>
+</div>
+<div class="stack">
+<div class="stat a left" style="--d:6;border-color:#A8D11E"><span class="num" data-count="66" data-suffix="M">66M</span><p class="p">Facebook users in Pakistan</p></div>
+<div class="stat a left" style="--d:7;border-color:var(--orange)"><span class="num" data-count="26.3" data-dec="1" data-suffix="M">26.3M</span><p class="p">Instagram users, about 38% aged 25–34</p></div>
+<div class="stat a left" style="--d:8;border-color:#2A3140"><span class="num" data-count="15" data-suffix="M">15M</span><p class="p">LinkedIn users: owners, investors, GMs</p></div>
+<div class="card a" style="--d:9"><p class="h3" style="font-weight:500">We only need the <b>few hundred premium gym owners</b>, and targeting by area, interest and job title finds every one.</p></div>
+</div>
+</div>
+<p class="src a fade" style="--d:10">Source: NapoleonCat, Meta and LinkedIn addressable audiences in Pakistan, 2026</p>
+</div>
+</section>
+
+<!-- 6 · ICP map -->
+<section class="slide dark" data-t="12000" aria-label="Who we target">
+<div class="wrap">
+<div class="head">
+<p class="eyebrow a fade" style="--d:0">Who we target</p>
+<h2 class="h2 a" style="--d:1">Three cities, one premium map</h2>
+</div>
+<div class="split">
+<div class="art m">
+<svg viewBox="0 0 760 430" role="img" aria-label="3D map platform with pins: Karachi in lime with 60% of budget, Lahore 25% and Islamabad 15% in orange">
+<g class="a zoom" style="--d:2">
+<polygon points="380,20 740,200 380,380 20,200" fill="url(#gMap)"/>
+<polygon points="20,200 380,380 380,406 20,226" fill="#0B0E13"/>
+<polygon points="380,380 740,200 740,226 380,406" fill="#151920"/>
+<g stroke="#3A4456" stroke-width="1.5"><line x1="110" y1="155" x2="470" y2="335"/><line x1="200" y1="110" x2="560" y2="290"/><line x1="290" y1="65" x2="650" y2="245"/><line x1="110" y1="245" x2="470" y2="65"/><line x1="200" y1="290" x2="560" y2="110"/><line x1="290" y1="335" x2="650" y2="155"/></g>
+<path class="dash" d="M250,290 Q330,200 420,110 Q470,150 520,190" fill="none" stroke="#C6F432" stroke-width="3" opacity=".75"/>
+<ellipse class="pulse" cx="250" cy="290" rx="80" ry="40" fill="url(#gRL)"/>
+<ellipse class="pulse" cx="520" cy="190" rx="54" ry="27" fill="url(#gGlowO)"/>
+<ellipse class="pulse" cx="420" cy="110" rx="54" ry="27" fill="url(#gGlowO)"/>
+</g>
+<g transform="translate(204,162) scale(1.3)"><g class="a drop" style="--d:4"><use href="#pin" fill="url(#gPinL)"/><circle cx="35" cy="35" r="12" fill="#0F1218"/><ellipse cx="24" cy="20" rx="8" ry="5" fill="#FFFFFF" opacity=".5"/></g></g>
+<g transform="translate(485,92)"><g class="a drop" style="--d:5"><use href="#pin" fill="url(#gPinO)"/><circle cx="35" cy="35" r="12" fill="#0F1218"/><ellipse cx="24" cy="20" rx="8" ry="5" fill="#FFFFFF" opacity=".5"/></g></g>
+<g transform="translate(385,12)"><g class="a drop" style="--d:6"><use href="#pin" fill="url(#gPinO)"/><circle cx="35" cy="35" r="12" fill="#0F1218"/><ellipse cx="24" cy="20" rx="8" ry="5" fill="#FFFFFF" opacity=".5"/></g></g>
+<g class="a fade" style="--d:5"><rect x="300" y="196" width="186" height="42" rx="21" fill="#C6F432"/><text class="svgs" x="393" y="224" text-anchor="middle" font-size="21" fill="#0F1218">Karachi · 60%</text></g>
+<g class="a fade" style="--d:6"><rect x="562" y="136" width="172" height="40" rx="20" fill="#2E3748" stroke="#FF7A3D"/><text class="svgs" x="648" y="163" text-anchor="middle" font-size="19" fill="#F3F1EA">Lahore · 25%</text></g>
+<g class="a fade" style="--d:7"><rect x="462" y="30" width="192" height="40" rx="20" fill="#2E3748" stroke="#FF7A3D"/><text class="svgs" x="558" y="57" text-anchor="middle" font-size="19" fill="#F3F1EA">Islamabad · 15%</text></g>
+</svg>
+</div>
+<div class="stack">
+<div class="card edge-l a right" style="--d:7"><h3 class="h3 big" style="color:var(--lime)">Karachi · Primary</h3><p class="p">DHA Phase 6, Clifton Block 5, PECHS</p><p class="p" style="color:var(--paper)">Club M · Structure · Shapes · CORE</p></div>
+<div class="card edge-o a right" style="--d:8"><h3 class="h3 big" style="color:var(--orange)">Lahore · Second</h3><p class="p">DHA Phase 3 (Y and Z blocks), Gulberg, Johar Town</p><p class="p" style="color:var(--paper)">Structure · Shapes · IronBox · ACTIVFIT</p></div>
+<div class="card edge-o a right" style="--d:9"><h3 class="h3 big" style="color:var(--orange)">Islamabad · Second</h3><p class="p">F-6 and F-7 Markaz, premium sectors</p><p class="p" style="color:var(--paper)">Boutique studios · 24-hour clubs · ladies-only gyms</p></div>
+</div>
+</div>
+<div class="chips a" style="--d:10">
+<span class="chip">Multi-branch chain owners</span><span class="chip">Boutique studio founders</span><span class="chip">Ladies-only clubs</span><span class="chip">Hotel and club fitness managers</span>
+</div>
+<p class="src a fade" style="--d:11">Prospect names from public gym listings, to be verified by the sales team. Budget split is proposed.</p>
+</div>
+</section>
+
+<!-- 7 · Big idea -->
+<section class="slide lime" data-t="12000" aria-label="The big idea">
+<div class="wrap">
+<div class="split">
+<div class="stack">
+<p class="eyebrow a fade" style="--d:0">The big idea</p>
+<h1 class="h1 a zoom" style="--d:1;text-shadow:0 8px 0 rgba(122,154,20,.55),0 24px 40px rgba(15,18,24,.22)">The gate doesn’t lie.</h1>
+<p class="lead a" style="--d:2;font-weight:500">Every asset shows one truth an owner can’t unsee: who really walked in today, and who actually paid.</p>
+<p class="h3 a fade" style="--d:3">#TheGateDoesntLie · #NoFreeEntry · #PoweredByFitnessMarvel</p>
+</div>
+<div class="gatecard a pop" style="--d:3" role="img" aria-label="Live smart-gate panel that alternates between Access granted for an active member and Access denied for an expired membership">
+<div class="gc-top"><span>Smart gate · live</span><i class="gc-dot"></i></div>
+<svg class="gc-face" viewBox="0 0 250 250" aria-hidden="true">
+<circle cx="125" cy="125" r="110" fill="rgba(255,255,255,.04)" stroke-width="6" class="gc-ring"/>
+<circle cx="125" cy="100" r="34" fill="none" stroke="#F3F1EA" stroke-width="6"/>
+<path d="M62,190 Q125,128 188,190" fill="none" stroke="#F3F1EA" stroke-width="6" stroke-linecap="round"/>
+<path d="M40,80 V40 H80 M170,40 H210 V80 M210,170 V210 H170 M80,210 H40 V170" fill="none" stroke-width="7" stroke-linecap="round" class="gc-ring"/>
+<rect x="45" y="0" width="160" height="4" fill="#C6F432" opacity=".9" class="gc-scan"/>
+</svg>
+<div class="gc-states">
+<div class="gc-st gc-a"><b><span class="ic" data-i="check"></span>Access granted</b><span>Member #2741 · active until Mar 2027 · entry logged</span></div>
+<div class="gc-st gc-b"><b><span class="ic" data-i="x"></span>Access denied</b><span>Membership expired 12 days ago · owner alerted with entry photo</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 8 · Pillars -->
+<section class="slide light" data-t="12000" aria-label="Content pillars">
+<div class="wrap">
+<div class="head">
+<p class="eyebrow a fade" style="--d:0">Content pillars</p>
+<h2 class="h2 a" style="--d:1">Four stories, told every week</h2>
+</div>
+<div class="row" style="--n:2">
+<div class="card h a" style="--d:2"><span class="tile t-or"><span class="ic" data-i="warn"></span></span><div class="stack" style="gap:6px"><h3 class="h3">01 · Leak Exposé</h3><p class="p">Reels recreating real front-desk moments, then the gate and Anti-Cheat catching them.</p></div></div>
+<div class="card h a" style="--d:3"><span class="tile t-ink"><span class="ic" data-i="chart"></span></span><div class="stack" style="gap:6px"><h3 class="h3">02 · Owner Power</h3><p class="p">“Ask your gym” demos and dashboards: three branches, one phone, one minute.</p></div></div>
+<div class="card h a" style="--d:4"><span class="tile t-lime"><span class="ic" data-i="star"></span></span><div class="stack" style="gap:6px"><h3 class="h3">03 · Member Wow</h3><p class="p">Under-a-second face entry, the FIT PAL app and kiosk upgrades: what members brag about.</p></div></div>
+<div class="card h a" style="--d:5"><span class="tile t-slate"><span class="ic" data-i="verified"></span></span><div class="stack" style="gap:6px"><h3 class="h3">04 · Proof and Prestige</h3><p class="p">“Now powered by Fitness Marvel” launch reels, owner testimonials and SRB-ready compliance.</p></div></div>
+</div>
+<div class="stack" style="gap:10px">
+<p class="eyebrow a fade" style="--d:6">Weekly content mix</p>
+<div class="mix a growx" style="--d:6" role="img" aria-label="Content mix: Leak Exposé 30%, Owner Power 25%, Member Wow 25%, Proof and Prestige 20%">
+<span style="flex:30 1 0;background:#FF7A3D;color:#0F1218">Leak Exposé · 30%</span>
+<span style="flex:25 1 0;background:#2A3140;color:#F3F1EA">Owner Power · 25%</span>
+<span style="flex:25 1 0;background:#C6F432;color:#0F1218">Member Wow · 25%</span>
+<span style="flex:20 1 0;background:#5B6B8C;color:#FFFFFF">Proof and Prestige · 20%</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 9 · Hooks -->
+<section class="slide dark" data-t="13000" aria-label="Hook bank">
+<div class="wrap">
+<div class="head">
+<p class="eyebrow a fade" style="--d:0">Hook bank</p>
+<h2 class="h2 a" style="--d:1">Built to stop an owner’s thumb</h2>
+</div>
+<div class="split wide">
+<div class="row" style="--n:2">
+<div class="card edge-l a pop" style="--d:2"><p class="h3">“Aaj aapke gym mein kitne log muft mein aaye?”</p><p class="p" style="color:var(--lime)">Reel · Roman Urdu · Leak Exposé</p></div>
+<div class="card edge-l a pop" style="--d:3"><p class="h3">“Your front desk might be running a side business.”</p><p class="p" style="color:var(--lime)">Reel · Anti-Cheat demo</p></div>
+<div class="card edge-o a pop" style="--d:4"><p class="h3">“Membership expired. Gate still open. Who pays?”</p><p class="p" style="color:var(--orange)">Carousel · Geo-ad, DHA and Clifton</p></div>
+<div class="card edge-o a pop" style="--d:5"><p class="h3">“One face. Every branch. Zero re-enrollment.”</p><p class="p" style="color:var(--orange)">Reel · Multi-branch chains</p></div>
+<div class="card edge-l a pop" style="--d:6"><p class="h3">“Who hasn’t renewed this month? Just ask your gym.”</p><p class="p" style="color:var(--lime)">Screen recording · Horizon Assistant</p></div>
+<div class="card edge-l a pop" style="--d:7"><p class="h3">“The January rush is coming. Is your gate ready?”</p><p class="p" style="color:var(--lime)">Seasonal ad · December push</p></div>
+</div>
+<div class="art m a right" style="--d:3">
+<svg class="float" viewBox="0 0 420 680" role="img" aria-label="3D phone tilted at an angle playing a Reel with a face-scan frame, with a heart reaction and a chat bubble floating beside it">
+<ellipse cx="210" cy="330" rx="200" ry="300" fill="url(#gGlow)"/>
+<ellipse cx="225" cy="640" rx="150" ry="24" fill="#000000" opacity=".55" filter="url(#fBlur)"/>
+<g transform="rotate(-8 210 330)">
+<rect x="84" y="44" width="260" height="560" rx="40" fill="#3A4252"/>
+<rect x="70" y="34" width="260" height="560" rx="40" fill="#0B0E13" stroke="#5A6680" stroke-width="3"/>
+<rect x="84" y="52" width="232" height="524" rx="28" fill="url(#gPh)"/>
+<rect x="170" y="64" width="60" height="10" rx="5" fill="#0B0E13"/>
+<circle cx="200" cy="230" r="78" fill="#C6F432" opacity=".08"/>
+<path d="M136,190 V160 H166 M234,160 H264 V190 M264,270 V300 H234 M166,300 H136 V270" stroke="#C6F432" stroke-width="6" fill="none" stroke-linecap="round"/>
+<circle cx="200" cy="212" r="26" stroke="#F3F1EA" stroke-width="5" fill="none"/>
+<path d="M156,284 Q200,240 244,284" stroke="#F3F1EA" stroke-width="5" fill="none" stroke-linecap="round"/>
+<rect class="scan" x="140" y="232" width="120" height="4" fill="#C6F432"/>
+<rect x="104" y="382" width="190" height="36" rx="18" fill="#C6F432"/>
+<rect x="104" y="434" width="150" height="14" rx="7" fill="#F3F1EA"/>
+<rect x="104" y="458" width="110" height="10" rx="5" fill="#8A92A0"/>
+<circle cx="292" cy="470" r="14" fill="#FF7A3D"/>
+<circle cx="292" cy="510" r="14" fill="#F3F1EA" opacity=".85"/>
+<rect x="104" y="540" width="192" height="6" rx="3" fill="#46516A"/>
+<rect x="104" y="540" width="118" height="6" rx="3" fill="#C6F432"/>
+</g>
+<g class="pulse"><circle cx="360" cy="160" r="38" fill="#FF7A3D"/><path d="M360,180 C338,164 342,148 352,148 C357,148 360,152 360,155 C360,152 363,148 368,148 C378,148 382,164 360,180Z" fill="#FFFFFF"/></g>
+<circle cx="48" cy="430" r="34" fill="#C6F432"/>
+<circle cx="36" cy="430" r="5" fill="#0F1218"/><circle cx="48" cy="430" r="5" fill="#0F1218"/><circle cx="60" cy="430" r="5" fill="#0F1218"/>
+</svg>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 10 · Channels -->
+<section class="slide light" data-t="12000" aria-label="Channel strategy">
+<div class="wrap">
+<div class="head">
+<p class="eyebrow a fade" style="--d:0">Channel strategy</p>
+<h2 class="h2 a" style="--d:1">Every channel has one job</h2>
+</div>
+<div class="row" style="--n:3">
+<div class="card a" style="--d:2"><span class="tile t-ig"><span class="ic" data-i="camera"></span></span><h3 class="h3">Instagram</h3><p class="p" style="color:var(--lime-d);font-weight:700">Prestige and reach</p><p class="p">Reels, Stories, carousels. Radius around premium gym clusters.</p></div>
+<div class="card a" style="--d:3"><span class="tile t-li"><span class="ic" data-i="brief"></span></span><h3 class="h3">LinkedIn</h3><p class="p" style="color:var(--lime-d);font-weight:700">Decision makers</p><p class="p">Founder posts and case studies for gym owners, club directors and hotel GMs.</p></div>
+<div class="card a" style="--d:4"><span class="tile t-fb"><span class="ic" data-i="users"></span></span><h3 class="h3">Facebook</h3><p class="p" style="color:var(--lime-d);font-weight:700">Precise lead ads</p><p class="p">Video and instant-form leads from fitness business owners and lookalikes.</p></div>
+<div class="card a" style="--d:5"><span class="tile t-go"><span class="ic" data-i="search"></span></span><h3 class="h3">Google Search</h3><p class="p" style="color:var(--lime-d);font-weight:700">Capture intent</p><p class="p">Ads on searches like “gym software” and “gym gate” in all three cities.</p></div>
+<div class="card a" style="--d:6"><span class="tile t-wa"><span class="ic" data-i="chat"></span></span><h3 class="h3">WhatsApp</h3><p class="p" style="color:var(--lime-d);font-weight:700">Close the loop</p><p class="p">Click-to-WhatsApp ads and demo booking. Every lead in a chat within minutes.</p></div>
+<div class="card a" style="--d:7"><span class="tile t-yt"><span class="ic" data-i="play"></span></span><h3 class="h3">YouTube · TikTok</h3><p class="p" style="color:var(--lime-d);font-weight:700">Demo virality</p><p class="p">Shorts of the gate, face entry and Anti-Cheat. Retargeting engaged viewers.</p></div>
+</div>
+<p class="lead a fade" style="--d:8">Every channel ends in the same place: a <b>WhatsApp chat</b> and a <b>booked demo</b>.</p>
+</div>
+</section>
+
+<!-- 11 · Funnel -->
+<section class="slide dark" data-t="13000" aria-label="The client-locking funnel">
+<div class="wrap">
+<div class="head">
+<p class="eyebrow a fade" style="--d:0">The client-locking funnel</p>
+<h2 class="h2 a" style="--d:1">From scroll to signed in four moves</h2>
+</div>
+<div class="split">
+<div class="art m">
+<svg viewBox="0 0 760 600" role="img" aria-label="3D funnel of four rings narrowing downward: Attract, Hook, Prove, and an orange Lock ring at the bottom">
+<g><g class="a drop" style="--d:2">
+<path d="M0,72 L70,182 A310,56 0 0 0 690,182 L760,72 A380,68 0 0 1 0,72 Z" fill="url(#gFu1)"/>
+<ellipse cx="380" cy="72" rx="376" ry="66" fill="url(#gFuIn)" stroke="#E4FF8A" stroke-width="4"/>
+<text class="svgt" x="380" y="86" text-anchor="middle" font-size="40" fill="#FFFFFF">01</text>
+</g></g>
+<g transform="translate(0,142)"><g class="a drop" style="--d:4">
+<path d="M70,60 L140,170 A240,43 0 0 0 620,170 L690,60 A310,56 0 0 1 70,60 Z" fill="url(#gFu2)"/>
+<ellipse cx="380" cy="60" rx="308" ry="54" fill="url(#gFuIn)" stroke="#D4FB60" stroke-width="4"/>
+<text class="svgt" x="380" y="73" text-anchor="middle" font-size="38" fill="#FFFFFF">02</text>
+</g></g>
+<g transform="translate(0,285)"><g class="a drop" style="--d:6">
+<path d="M140,47 L210,157 A170,31 0 0 0 550,157 L620,47 A240,43 0 0 1 140,47 Z" fill="url(#gFu3)"/>
+<ellipse cx="380" cy="47" rx="238" ry="41" fill="url(#gFuIn)" stroke="#B4E022" stroke-width="4"/>
+<text class="svgt" x="380" y="59" text-anchor="middle" font-size="34" fill="#FFFFFF">03</text>
+</g></g>
+<g transform="translate(0,427)"><g class="a drop" style="--d:8">
+<path d="M210,35 L280,145 A100,18 0 0 0 480,145 L550,35 A170,31 0 0 1 210,35 Z" fill="url(#gFu4)"/>
+<ellipse cx="380" cy="35" rx="168" ry="29" fill="url(#gFuIn)" stroke="#FFB08A" stroke-width="4"/>
+<text class="svgt" x="380" y="46" text-anchor="middle" font-size="30" fill="#FFFFFF">04</text>
+</g></g>
+</svg>
+</div>
+<div class="stack">
+<div class="a left" style="--d:3"><h3 class="h3 big" style="color:var(--lime)">01 · Attract</h3><p class="p">Geo-targeted Reels, search ads and lead ads reach premium gym owners.</p></div>
+<div class="a left" style="--d:5"><h3 class="h3 big" style="color:var(--lime)">02 · Hook</h3><p class="p">A free 15-minute Revenue Leak Check on WhatsApp.</p></div>
+<div class="a left" style="--d:7"><h3 class="h3 big" style="color:var(--lime)">03 · Prove</h3><p class="p">A live demo with a working gate and face terminal.</p></div>
+<div class="a left" style="--d:9"><h3 class="h3 big" style="color:var(--orange)">04 · Lock</h3><p class="p">Installments, a launch reel and referral rewards seal it.</p></div>
+<p class="pill a fade" style="--d:10"><span class="ic" data-i="target"></span>Retargeting follows every owner who watched, clicked or chatted, until they book the demo.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 12 · Offers -->
+<section class="slide light" data-t="12000" aria-label="Client-locking offers">
+<div class="wrap">
+<div class="split wide">
+<div class="head">
+<p class="eyebrow a fade" style="--d:0">Client-locking offers</p>
+<h2 class="h2 a" style="--d:1">Offers that turn a demo into a signature</h2>
+</div>
+<div class="art s a pop" style="--d:2">
+<svg viewBox="0 0 340 340" role="img" aria-label="3D lime medallion with orange ribbons reading 25 founding gyms">
+<ellipse cx="175" cy="318" rx="130" ry="14" fill="#0F1218" opacity=".25" filter="url(#fBlur)"/>
+<polygon points="110,220 82,330 122,312 150,336 168,236" fill="#C4471A"/>
+<polygon points="230,220 258,330 218,312 190,336 172,236" fill="#FF7A3D"/>
+<ellipse cx="170" cy="180" rx="150" ry="122" fill="#5E7A0C"/>
+<rect x="20" y="150" width="300" height="30" fill="#7A9A14"/>
+<ellipse cx="170" cy="150" rx="150" ry="122" fill="url(#gMed)"/>
+<ellipse cx="170" cy="150" rx="120" ry="96" fill="none" stroke="#7A9A14" stroke-width="6"/>
+<ellipse cx="118" cy="82" rx="48" ry="18" fill="#FFFFFF" opacity=".45"/>
+<text class="svgt" x="170" y="172" text-anchor="middle" font-size="96" fill="#0F1218">25</text>
+<text class="svgs" x="170" y="210" text-anchor="middle" font-size="17" letter-spacing="3" fill="#0F1218">FOUNDING GYMS</text>
+</svg>
+</div>
+</div>
+<div class="row" style="--n:2">
+<div class="card h a" style="--d:3"><span class="tile t-lime"><span class="ic" data-i="search"></span></span><div class="stack" style="gap:6px"><h3 class="h3">Free Revenue Leak Check</h3><p class="p">A 15-minute WhatsApp call that shows an owner where money slips out.</p></div></div>
+<div class="card h a" style="--d:4"><span class="tile t-or"><span class="ic" data-i="star"></span></span><div class="stack" style="gap:6px"><h3 class="h3">Karachi Founding 25</h3><p class="p">The first 25 elite gyms get priority installation and co-branded launch content.</p></div></div>
+<div class="card h a" style="--d:5"><span class="tile t-ink"><span class="ic" data-i="check"></span></span><div class="stack" style="gap:6px"><h3 class="h3">0% markup installments</h3><p class="p">Already offered in Pakistan on eligible equipment. Now in every ad.</p></div></div>
+<div class="card h inv a" style="--d:6"><span class="tile t-lime"><span class="ic" data-i="play"></span></span><div class="stack" style="gap:6px"><h3 class="h3" style="color:var(--lime)">Launch reel, on Mastech</h3><p class="p">A pro “Now powered by Fitness Marvel” reel for every new client gym.</p></div></div>
+</div>
+<p class="src a fade" style="--d:7">Proposed offers, subject to Fitness Marvel approval</p>
+</div>
+</section>
+
+<!-- 13 · Rollout -->
+<section class="slide dark" data-t="12000" aria-label="90-day rollout">
+<div class="wrap">
+<div class="head">
+<p class="eyebrow a fade" style="--d:0">90-day rollout</p>
+<h2 class="h2 a" style="--d:1">Gate-ready before the January rush</h2>
+</div>
+<div class="stairs">
+<div class="stair">
+<div class="a" style="--d:3"><p class="eyebrow">Nov 2026 · Weeks 1–4</p><h3 class="h3 big">Karachi ignition</h3><ul><li>Campaign kit and hook tests</li><li>Demo shoot at a partner gym</li><li>Geo-ads and WhatsApp funnel live</li></ul></div>
+<svg viewBox="0 0 540 160" class="a grow" style="--d:2" aria-hidden="true"><polygon points="0,40 60,0 540,0 480,40" fill="#E4FF8A"/><rect x="0" y="40" width="480" height="120" fill="url(#gSt1)"/><polygon points="480,40 540,0 540,120 480,160" fill="#4E660A"/><text class="svgt" x="32" y="122" font-size="60" fill="#0F1218">01</text></svg>
+</div>
+<div class="stair">
+<div class="a" style="--d:5"><p class="eyebrow">Dec 2026 · Weeks 5–8</p><h3 class="h3 big">Scale and test Lahore</h3><ul><li>Budget into winning hooks</li><li>LinkedIn founder content</li><li>First client case study</li></ul></div>
+<svg viewBox="0 0 540 260" class="a grow" style="--d:4" aria-hidden="true"><polygon points="0,40 60,0 540,0 480,40" fill="#F0FFB8"/><rect x="0" y="40" width="480" height="220" fill="url(#gSt2)"/><polygon points="480,40 540,0 540,220 480,260" fill="#5E7A0C"/><text class="svgt" x="32" y="122" font-size="60" fill="#0F1218">02</text></svg>
+</div>
+<div class="stair">
+<div class="a" style="--d:7"><p class="eyebrow" style="color:var(--orange)">Jan 2027 · Weeks 9–12</p><h3 class="h3 big">Islamabad and New Year</h3><ul><li>Islamabad campaign launch</li><li>Retarget every engaged owner</li><li>Client launch reels go live</li></ul></div>
+<svg viewBox="0 0 540 360" class="a grow" style="--d:6" aria-hidden="true"><polygon points="0,40 60,0 540,0 480,40" fill="#FFC4A4"/><rect x="0" y="40" width="480" height="320" fill="url(#gSt3)"/><polygon points="480,40 540,0 540,320 480,360" fill="#9A3812"/><text class="svgt" x="32" y="122" font-size="60" fill="#0F1218">03</text></svg>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 14 · Results -->
+<section class="slide light" data-t="13000" aria-label="Instant results">
+<div class="wrap">
+<div class="head">
+<p class="eyebrow a fade" style="--d:0">Instant results</p>
+<h2 class="h2 a" style="--d:1">What “instant” looks like</h2>
+</div>
+<div class="split">
+<div class="stack">
+<div class="ms a left" style="--d:2"><span class="ball"><span class="ic" data-i="bolt"></span></span><div><p class="num">72 hrs</p><p class="p">Ads live across Karachi after creatives are approved</p></div></div>
+<div class="ms a left" style="--d:3"><span class="ball"><span class="ic" data-i="chat"></span></span><div><p class="num">Week 1</p><p class="p">First gym-owner leads arriving in WhatsApp</p></div></div>
+<div class="ms a left" style="--d:4"><span class="ball"><span class="ic" data-i="users"></span></span><div><p class="num">Week 2</p><p class="p">First demos booked with the Fitness Marvel team</p></div></div>
+<div class="ms a left" style="--d:5"><span class="ball or"><span class="ic" data-i="chart"></span></span><div><p class="num">Every Monday</p><p class="p">A results report, every week</p></div></div>
+</div>
+<div class="stack">
+<div class="card a" style="--d:6;overflow-x:auto">
+<table class="kpi">
+<thead><tr><th scope="col">KPI we report</th><th scope="col">90-day target</th></tr></thead>
+<tbody>
+<tr><td>Owners reached in target areas</td><td>Approx. 50K+</td></tr>
+<tr><td>Cost per qualified lead</td><td>PKR 7,500 or less</td></tr>
+<tr><td>Demos booked per month</td><td>8+ (about 24 over 90 days)</td></tr>
+<tr><td>Demo-to-signed rate</td><td>15%+</td></tr>
+<tr><td>Gyms signed</td><td>5+, with more still deciding</td></tr>
+</tbody>
+</table>
+</div>
+<div class="art">
+<svg viewBox="-10 -12 812 185" role="img" aria-label="Five 3D bars rising from left to right with an orange trend arrow climbing above them" style="max-height:20vh">
+<g class="a grow" style="--d:7"><polygon points="30,125 54,109 154,109 130,125" fill="#C9CFDA"/><rect x="30" y="125" width="100" height="40" fill="#9AA3B3"/><polygon points="130,125 154,109 154,149 130,165" fill="#6A7690"/></g>
+<g class="a grow" style="--d:8"><polygon points="180,100 204,84 304,84 280,100" fill="#B7C0CF"/><rect x="180" y="100" width="100" height="65" fill="#7D8DAD"/><polygon points="280,100 304,84 304,149 280,165" fill="#5B6B8C"/></g>
+<g class="a grow" style="--d:9"><polygon points="330,75 354,59 454,59 430,75" fill="#DDFB7A"/><rect x="330" y="75" width="100" height="90" fill="#A8D11E"/><polygon points="430,75 454,59 454,149 430,165" fill="#6E8C10"/></g>
+<g class="a grow" style="--d:10"><polygon points="480,50 504,34 604,34 580,50" fill="#E4FF8A"/><rect x="480" y="50" width="100" height="115" fill="#B4E022"/><polygon points="580,50 604,34 604,149 580,165" fill="#7A9A14"/></g>
+<g class="a grow" style="--d:11"><polygon points="630,25 654,9 754,9 730,25" fill="#F0FFB8"/><rect x="630" y="25" width="100" height="140" fill="#C6F432"/><polygon points="730,25 754,9 754,149 730,165" fill="#8FB52A"/></g>
+<g class="a fade" style="--d:12"><polyline points="20,80 170,62 320,40 470,18 600,4" fill="none" stroke="#FF7A3D" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><polygon points="614,-1 594,13 590,-4" fill="#FF7A3D"/></g>
+</svg>
+</div>
+</div>
+</div>
+<p class="src a fade" style="--d:12">Targets to be set with Fitness Marvel once budget is agreed.</p>
+</div>
+</section>
+
+<!-- 15 · Why Mastech -->
+<section class="slide dark" data-t="12000" aria-label="Why Mastech">
+<div class="wrap">
+<div class="head">
+<p class="eyebrow a fade" style="--d:0">Why Mastech</p>
+<h2 class="h2 a" style="--d:1">Local speed, regional reach, AI-native</h2>
+</div>
+<div class="row" style="--n:3">
+<div class="card a" style="--d:2"><span class="tile t-lime"><span class="ic" data-i="home"></span></span><h3 class="h3">On the ground in Karachi</h3><p class="p">Our office on Shahrah-e-Faisal is minutes from DHA and Clifton. We can shoot at a client gym the same week.</p></div>
+<div class="card a" style="--d:3"><span class="tile t-or"><span class="ic" data-i="globe"></span></span><h3 class="h3">Ready for the Gulf</h3><p class="p">A second office in Muscat means the playbook can follow Fitness Marvel into Saudi Arabia and the UAE.</p></div>
+<div class="card a" style="--d:4"><span class="tile t-ink"><span class="ic" data-i="bolt"></span></span><h3 class="h3">Tech that speaks tech</h3><p class="p">Social, paid ads, branding, web and AI under one roof. We understand the product we’re selling.</p></div>
+</div>
+<div class="split">
+<p class="lead a" style="--d:5">Trusted for branding, websites and social media growth by <b style="color:var(--paper)">global brands across the UAE, Oman, the UK, Canada and Saudi Arabia</b>.</p>
+<div class="art s">
+<svg viewBox="0 0 692 230" role="img" aria-label="Two 3D map pins, Muscat in orange and Karachi in lime, joined by a dashed flight arc">
+<ellipse class="pulse" cx="130" cy="176" rx="70" ry="18" fill="url(#gGlowO)"/>
+<ellipse class="pulse" cx="560" cy="176" rx="70" ry="18" fill="url(#gRL)"/>
+<path class="dash a fade" style="--d:7" d="M130,80 Q345,-30 560,80" fill="none" stroke="#C6F432" stroke-width="4"/>
+<g transform="translate(95,74)"><g class="a drop" style="--d:6"><use href="#pin" fill="url(#gPinO)"/><circle cx="35" cy="35" r="12" fill="#0F1218"/><ellipse cx="24" cy="20" rx="8" ry="5" fill="#FFFFFF" opacity=".5"/></g></g>
+<g transform="translate(525,74)"><g class="a drop" style="--d:6"><use href="#pin" fill="url(#gPinL)"/><circle cx="35" cy="35" r="12" fill="#0F1218"/><ellipse cx="24" cy="20" rx="8" ry="5" fill="#FFFFFF" opacity=".5"/></g></g>
+<text class="svgs" x="130" y="222" text-anchor="middle" font-size="22" fill="#FF7A3D">Muscat</text>
+<text class="svgs" x="560" y="222" text-anchor="middle" font-size="22" fill="#C6F432">Karachi</text>
+</svg>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 16 · Investment -->
+<section class="slide light" data-t="15000" aria-label="Investment">
+<div class="wrap">
+<div class="split wide">
+<div class="head">
+<p class="eyebrow a fade" style="--d:0">Investment</p>
+<h2 class="h2 a" style="--d:1">Choose your speed</h2>
+</div>
+<div class="art s a" style="--d:2">
+<svg viewBox="0 0 312 220" role="img" aria-label="Three 3D stacks of gold coins growing taller from left to right" style="max-height:18vh">
+<ellipse cx="156" cy="208" rx="150" ry="10" fill="#0F1218" opacity=".25" filter="url(#fBlur)"/>
+<use href="#coin" x="60" y="190"/><use href="#coin" x="60" y="176"/>
+<use href="#coin" x="156" y="190"/><use href="#coin" x="156" y="176"/><use href="#coin" x="156" y="162"/><use href="#coin" x="156" y="148"/>
+<use href="#coin" x="252" y="190"/><use href="#coin" x="252" y="176"/><use href="#coin" x="252" y="162"/><use href="#coin" x="252" y="148"/><use href="#coin" x="252" y="134"/><use href="#coin" x="252" y="120"/>
+</svg>
+</div>
+</div>
+<div class="row" style="--n:3;align-items:start">
+<div class="card pkg a" style="--d:3">
+<h3 class="h3 big">Launch · Karachi</h3>
+<p class="price" style="color:var(--lime-d)">PKR 99,000 <small>/ month</small></p>
+<ul><li>Karachi city only</li><li>10 posts and 6 Reels</li><li>Meta ads campaign and WhatsApp funnel</li><li>Weekly report</li></ul>
+<div class="spend"><p class="lbl" style="color:var(--lime-d)">Ad spend per month</p><p>Meta: <b>PKR 80,000–110,000</b></p><p style="color:var(--body-l)">Total PKR 80,000–110,000</p></div>
+</div>
+<div class="card pkg inv rec a pop" style="--d:4">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h3 class="h3 big">Growth</h3><span class="badge">Recommended</span></div>
+<p class="price" style="color:var(--lime)">PKR 199,000 <small>/ month</small></p>
+<ul><li>All three cities, 3 months</li><li>Everything in the Launch package</li><li>18 posts and 9 Reels</li><li>1 influencer promotional video</li><li>LinkedIn founder content</li><li>Google Ads campaign</li><li>Monthly demo shoot and a case study</li></ul>
+<div class="spend"><p class="lbl" style="color:var(--lime)">Ad spend per month</p><p>Meta: <b>PKR 150,000–180,000</b></p><p>Google: <b>PKR 50,000–70,000</b></p><p style="color:var(--muted)">Total PKR 200,000–250,000</p></div>
+</div>
+<div class="card pkg a" style="--d:5;background:linear-gradient(160deg,#7A66FF,#4B35E0);border-color:#7A66FF;color:#FFFFFF">
+<h3 class="h3 big">Dominate</h3>
+<p class="price" style="color:#5CF5FF">PKR 385,000 <small style="color:#D9D3FF">/ month</small></p>
+<ul><li style="color:#FFFFFF">All three cities, 3 months</li><li style="color:#FFFFFF">TikTok, LinkedIn, Meta and Google</li><li style="color:#FFFFFF">10 TikTok videos and 3 influencer promotional videos</li><li style="color:#FFFFFF">Everything in Growth</li><li style="color:#FFFFFF">Launch reel for every new client</li><li style="color:#FFFFFF">YouTube and TikTok demo series</li></ul>
+<div class="spend"><p class="lbl" style="color:#4B35E0">Ad spend per month</p><p>Meta: <b>PKR 250,000+</b></p><p>Google: <b>PKR 100,000+</b></p><p style="color:var(--body-l)">Total PKR 350,000+</p></div>
+</div>
+</div>
+<div class="row a fade" style="--n:2;--d:6">
+<p class="p"><b style="color:var(--lime-d)">Meta, about 70%:</b> finds owners who aren’t looking yet, through radius targeting, Reels and lead forms.</p>
+<p class="p"><b style="color:var(--orange-d)">Google, about 30%:</b> catches owners already searching for gym software or a gym gate. Fewer clicks, highest intent.</p>
+</div>
+<p class="src a fade" style="--d:7">Ad spend is paid directly to Meta and Google at cost, with no markup. Proposed pricing.</p>
+</div>
+</section>
+
+<!-- 17 · Next steps -->
+<section class="slide dark" data-t="15000" aria-label="Next steps">
+<div class="wrap">
+<div class="split">
+<div class="stack">
+<p class="eyebrow a fade" style="--d:0">Next steps</p>
+<h1 class="h1 a" style="--d:1;font-size:clamp(40px,min(6vw,10vh),104px)">Let’s lock Karachi before January.</h1>
+<div class="row" style="--n:3">
+<div class="card a" style="--d:3;box-shadow:inset 0 5px 0 var(--lime),0 24px 48px rgba(0,0,0,.42)"><p class="num" style="font-size:34px;color:var(--lime)">01</p><p class="p">Approve the package and offers this week</p></div>
+<div class="card a" style="--d:4;box-shadow:inset 0 5px 0 var(--lime),0 24px 48px rgba(0,0,0,.42)"><p class="num" style="font-size:34px;color:var(--lime)">02</p><p class="p">Kick off social media marketing across platforms in week one</p></div>
+<div class="card a" style="--d:5;box-shadow:inset 0 5px 0 var(--orange),0 24px 48px rgba(0,0,0,.42)"><p class="num" style="font-size:34px;color:var(--orange)">03</p><p class="p">Ads live within 72 hours of approved creatives</p></div>
+</div>
+<div class="chips a pop" style="--d:6;gap:12px">
+<a class="btn" href="https://wa.me/923083988848" target="_blank" rel="noopener"><span class="ic" data-i="chat"></span>WhatsApp +92 308 3988848</a>
+<a class="btn ghost" href="https://mastechz.com" target="_blank" rel="noopener"><span class="ic" data-i="globe"></span>mastechz.com</a>
+<button class="btn ghost" id="copyMail" type="button"><span class="ic" data-i="copy"></span><span class="selectable" id="mailTxt">info@mastechz.com</span></button>
+</div>
+</div>
+<div class="art a zoom" style="--d:2" data-gate="final"></div>
+</div>
+</div>
+</section>
+
+</main>
+
+<nav class="chrome nav" aria-label="Slideshow controls">
+<button type="button" id="prev" aria-label="Previous slide"><span class="ic" data-i="left"></span></button>
+<button type="button" id="play" class="play" aria-label="Pause the show"><span class="ic" data-i="pause"></span></button>
+<div class="dots" id="dots"></div>
+<span class="count" id="count" aria-live="polite">1 / 17</span>
+<button type="button" id="next" aria-label="Next slide"><span class="ic" data-i="right"></span></button>
+</nav>
+<div class="bar" aria-hidden="true"><i id="bar"></i></div>
+
+<script>
+(() => {
+  const ICONS = {
+    users:'M16 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 18.5V20M10 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM20 20v-1.5a3.5 3.5 0 0 0-2.5-3.35M15.5 4.15a3.5 3.5 0 0 1 0 6.7',
+    clock:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2',
+    warn:'M12 3 2 20h20L12 3zM12 10v4M12 17h.01',
+    activity:'M3 12h4l3-8 4 16 3-8h4',
+    lock:'M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4',
+    chart:'M4 20V10M10 20V4M16 20v-7M2 20h20',
+    kiosk:'M7 3h10v12H7zM12 15v4M9 21h6M10 7h4M10 10h4',
+    face:'M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4M12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM8 17a4 4 0 0 1 8 0',
+    gate:'M4 21V5M10 21V5M14 21V5M20 21V5M10 11h4M3 21h18',
+    check:'M5 12.5 10 17 19 7',
+    x:'M6 6l12 12M18 6 6 18',
+    chat:'M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5A8 8 0 1 1 21 12z',
+    phone:'M8 2h8a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zM11 18h2',
+    dash:'M3 4h18v12H3zM8 20h8M12 16v4M7 12l3-3 3 2 4-4',
+    bolt:'M13 2 4 14h7l-1 8 9-12h-7l1-8z',
+    star:'M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3l-5.5 2.9 1-6.2L3 9.6l6.2-.9L12 3z',
+    search:'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM16 16l5 5',
+    play:'M7 4l13 8-13 8V4z',
+    pause:'M8 5v14M16 5v14',
+    home:'M3 11 12 4l9 7M5 10v10h14V10',
+    globe:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18',
+    verified:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3zM8.5 12l2.5 2.5 4.5-5',
+    layers:'M12 3 2 8l10 5 10-5-10-5zM2 13l10 5 10-5M2 18l10 5 10-5',
+    wallet:'M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3zM3 7l13-4v4M17 13.5h.01',
+    branch:'M6 3v12M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 9a9 9 0 0 1-9 9',
+    camera:'M4 7h3l2-3h6l2 3h3v13H4zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
+    brief:'M3 8h18v12H3zM8 8V5h8v3M3 13h18',
+    target:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 12h.01',
+    copy:'M9 9h11v11H9zM5 15H4V4h11v1',
+    left:'M15 5l-7 7 7 7',
+    right:'M9 5l7 7-7 7'
+  };
+  const paint = root => root.querySelectorAll('.ic[data-i]').forEach(el => {
+    const d = ICONS[el.dataset.i];
+    if (d) el.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + d + '"/></svg>';
+  });
+
+  /* 3D gate used on the first and last screens */
+  const gate = final => `<svg viewBox="0 0 600 600" role="img" aria-label="${final ? '3D smart gate on a lit walkway with a green check floating above it' : '3D smart gate with pulsing lights, a face-scan frame and a glowing walkway'}">
+<ellipse cx="290" cy="485" rx="270" ry="80" fill="#000" opacity=".5" filter="url(#fBlur)"/>
+<ellipse cx="290" cy="400" rx="250" ry="160" fill="url(#gGlow)" class="pulse"/>
+<polygon points="50,425 290,305 530,425 290,545" fill="#2A3140"/>
+<polygon points="50,425 290,545 290,577 50,457" fill="#161A22"/>
+<polygon points="290,545 530,425 530,457 290,577" fill="#1F2531"/>
+<g stroke="#384152" stroke-width="1.5"><line x1="110" y1="395" x2="350" y2="515"/><line x1="230" y1="335" x2="470" y2="455"/><line x1="110" y1="455" x2="350" y2="335"/><line x1="230" y1="515" x2="470" y2="395"/></g>
+<line x1="170" y1="485" x2="410" y2="365" stroke="#C6F432" stroke-width="4" class="dash"/>
+<polygon points="200,230 240,250 200,270 160,250" fill="#5A6680"/>
+<polygon points="160,250 200,270 200,400 160,380" fill="url(#gPl)"/>
+<polygon points="200,270 240,250 240,380 200,400" fill="url(#gPr)"/>
+<polygon points="214,283 226,277 226,357 214,363" fill="#C6F432" class="pulse"/>
+<ellipse cx="200" cy="250" rx="18" ry="9" fill="#C6F432" class="pulse"/>
+<polygon points="240,295 282,316 282,386 240,365" fill="url(#gGl)" stroke="#C6F432" stroke-width="1.5" class="glass"/>
+<polygon points="298,324 340,345 340,415 298,394" fill="url(#gGl)" stroke="#C6F432" stroke-width="1.5" class="glass"/>
+<polygon points="380,320 420,340 380,360 340,340" fill="#5A6680"/>
+<polygon points="340,340 380,360 380,490 340,470" fill="url(#gPl)"/>
+<polygon points="380,360 420,340 420,470 380,490" fill="url(#gPr)"/>
+<polygon points="394,373 406,367 406,447 394,453" fill="#C6F432" class="pulse"/>
+<ellipse cx="380" cy="340" rx="18" ry="9" fill="#C6F432" class="pulse"/>
+${final ? `<g transform="translate(300,170)"><g class="bob"><circle r="70" fill="#C6F432" opacity=".18"/><circle r="56" fill="#C6F432"/><path d="M-24,0 L-7,18 L26,-18" stroke="#0F1218" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g>`
+ : `<line x1="405" y1="195" x2="215" y2="242" stroke="#C6F432" stroke-width="2" opacity=".6" class="dash"/>
+<g transform="translate(455,150)"><g class="bob"><circle r="64" fill="#C6F432" opacity=".12"/>
+<path d="M-58,-30 V-58 H-30 M30,-58 H58 V-30 M58,30 V58 H30 M-30,58 H-58 V30" stroke="#C6F432" stroke-width="5" fill="none" stroke-linecap="round"/>
+<circle cy="-10" r="18" stroke="#C6F432" stroke-width="4" fill="none"/><path d="M-30,36 Q0,6 30,36" stroke="#C6F432" stroke-width="4" fill="none"/>
+<rect x="-56" y="-1.5" width="112" height="3" fill="#C6F432" class="scan"/></g></g>
+<g transform="translate(120,200)"><g class="bob"><circle r="32" fill="#C6F432"/><path d="M-13,0 L-4,10 L14,-10" stroke="#0F1218" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g>`}
+<circle cx="520" cy="300" r="5" fill="#C6F432" class="pulse"/><circle cx="80" cy="330" r="4" fill="#FF7A3D" class="pulse"/><circle cx="560" cy="220" r="3" fill="#C6F432" class="pulse"/>
+</svg>`;
+  document.querySelectorAll('[data-gate]').forEach(el => { el.innerHTML = gate(el.dataset.gate === 'final'); });
+
+  /* 3D infrastructure stack: five plates, bottom to top */
+  const stack = document.getElementById('stack');
+  if (stack) {
+    const L = [
+      {top:'#2A3140', l:'#161A22', r:'#1F2531', edge:'#C6F432', led:'#C6F432'},
+      {top:'#46516A', l:'#232936', r:'#2E3646', edge:'#8A92A0', led:'#C6F432'},
+      {top:'#C6F432', l:'#6E8C10', r:'#A8D11E', edge:'#E4FF8A', led:'#0F1218'},
+      {top:'#FF7A3D', l:'#9A3812', r:'#C4471A', edge:'#FFB892', led:'#FFFFFF'},
+      {top:'#F3F1EA', l:'#A9A496', r:'#CFCABD', edge:'#FFFFFF', led:'#0F1218'}
+    ];
+    let h = '<ellipse cx="260" cy="560" rx="250" ry="30" fill="#000" opacity=".55" filter="url(#fBlur)"/>';
+    L.forEach((c, i) => {
+      const y = 330 - i * 74, T = 20;
+      const top = `260,${y} 490,${y+92} 260,${y+184} 30,${y+92}`;
+      const left = `30,${y+92} 260,${y+184} 260,${y+184+T} 30,${y+92+T}`;
+      const right = `260,${y+184} 490,${y+92} 490,${y+92+T} 260,${y+184+T}`;
+      let leds = '';
+      [0.25, 0.5, 0.75].forEach((t, k) => {
+        const dl = ((i * 3 + k) * 0.18).toFixed(2);
+        leds += `<circle class="pulse" style="animation-delay:${dl}s" cx="${30+230*t}" cy="${y+92+92*t+T/2}" r="3.6" fill="${c.led}"/>`;
+        leds += `<circle class="pulse" style="animation-delay:${(+dl+0.09).toFixed(2)}s" cx="${260+230*t}" cy="${y+184-92*t+T/2}" r="3.6" fill="${c.led}"/>`;
+      });
+      let extra = '';
+      if (i === 4) {
+        const cx = 260, cy = y + 92;
+        const nodes = [[260, y+44], [176, y+92], [344, y+92], [260, y+140]];
+        extra = nodes.map(n => `<line class="dash" x1="${cx}" y1="${cy}" x2="${n[0]}" y2="${n[1]}" stroke="#0F1218" stroke-width="3"/>`).join('')
+              + nodes.concat([[cx, cy]]).map((n, k) => `<circle cx="${n[0]}" cy="${n[1]}" r="${k === 4 ? 12 : 9}" fill="#0F1218" stroke="#C6F432" stroke-width="3"/>`).join('');
+      }
+      h += `<g class="a drop" style="--d:${i + 3}"><polygon points="${left}" fill="${c.l}"/><polygon points="${right}" fill="${c.r}"/><polygon points="${top}" fill="${c.top}" stroke="${c.edge}" stroke-width="1.5" stroke-opacity=".7"/>${leds}${extra}</g>`;
+    });
+    stack.innerHTML = h;
+  }
+  paint(document);
+
+  /* ---------- slideshow engine ---------- */
+  const deck = document.getElementById('deck');
+  const slides = [...deck.querySelectorAll('.slide')];
+  const n = slides.length;
+  const dotsEl = document.getElementById('dots');
+  const countEl = document.getElementById('count');
+  const barEl = document.getElementById('bar');
+  const playBtn = document.getElementById('play');
+  const hint = document.getElementById('hint');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let i = 0, playing = true, t0 = performance.now(), touched = false;
+
+  const dots = slides.map((s, k) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Go to slide ' + (k + 1) + ': ' + (s.getAttribute('aria-label') || ''));
+    b.addEventListener('click', () => go(k, true));
+    dotsEl.appendChild(b);
+    return b;
+  });
+
+  const countUp = el => {
+    const to = parseFloat(el.dataset.count), dec = +(el.dataset.dec || 0), suf = el.dataset.suffix || '';
+    const fin = to.toFixed(dec) + suf;
+    if (reduce) { el.textContent = fin; return; }
+    const start = performance.now() + 700, dur = 1400;
+    const step = now => {
+      const p = Math.max(0, Math.min(1, (now - start) / dur));
+      el.textContent = (to * (1 - Math.pow(1 - p, 3))).toFixed(dec) + suf;
+      if (p < 1) requestAnimationFrame(step); else el.textContent = fin;
+    };
+    requestAnimationFrame(step);
+  };
+
+  function setPlaying(p) {
+    playing = p;
+    playBtn.setAttribute('aria-label', p ? 'Pause the show' : 'Play the show');
+    playBtn.querySelector('.ic').dataset.i = p ? 'pause' : 'play';
+    paint(playBtn);
+    if (p) { if (i === n - 1) go(0, false); t0 = performance.now(); }
+  }
+
+  function userActed() {
+    if (!touched) { touched = true; hint.classList.add('gone'); }
+  }
+
+  function go(k, user) {
+    k = Math.max(0, Math.min(n - 1, k));
+    if (user) { userActed(); if (playing) setPlaying(false); }
+    slides.forEach((s, j) => {
+      s.classList.toggle('active', j === k);
+      s.classList.toggle('past', j < k);
+      s.setAttribute('aria-hidden', j === k ? 'false' : 'true');
+      s.inert = j !== k;
+    });
+    i = k;
+    slides[k].scrollTop = 0;
+    t0 = performance.now();
+    dots.forEach((d, j) => d.setAttribute('aria-current', j === k ? 'true' : 'false'));
+    countEl.textContent = (k + 1) + ' / ' + n;
+    slides[k].querySelectorAll('[data-count]').forEach(countUp);
+    try { history.replaceState(null, '', '#slide-' + (k + 1)); } catch (e) {}
+  }
+
+  const next = user => { if (i < n - 1) go(i + 1, user); else if (user) userActed(); };
+  const prev = user => go(i - 1, user);
+
+  document.getElementById('next').addEventListener('click', () => next(true));
+  document.getElementById('prev').addEventListener('click', () => prev(true));
+  playBtn.addEventListener('click', () => { userActed(); setPlaying(!playing); });
+
+  document.addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const onButton = e.target.closest && e.target.closest('button,a');
+    if (['ArrowRight', 'PageDown'].includes(e.key) || (e.key === ' ' && !onButton)) { e.preventDefault(); next(true); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(true); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0, true); }
+    else if (e.key === 'End') { e.preventDefault(); go(n - 1, true); }
+  });
+
+  let wheelLock = 0;
+  deck.addEventListener('wheel', e => {
+    const s = slides[i];
+    const dy = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+    if (s.scrollHeight > s.clientHeight + 4) {
+      if (dy > 0 && s.scrollTop + s.clientHeight < s.scrollHeight - 2) return;
+      if (dy < 0 && s.scrollTop > 2) return;
+    }
+    e.preventDefault();
+    const now = Date.now();
+    if (now < wheelLock || Math.abs(dy) < 12) return;
+    wheelLock = now + 900;
+    dy > 0 ? next(true) : prev(true);
+  }, { passive: false });
+
+  let tx = null, ty = null;
+  deck.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+  deck.addEventListener('touchend', e => {
+    if (tx === null) return;
+    const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.2) dx < 0 ? next(true) : prev(true);
+    tx = ty = null;
+  }, { passive: true });
+
+  const copyBtn = document.getElementById('copyMail');
+  copyBtn.addEventListener('click', () => {
+    const txt = 'info@mastechz.com';
+    const label = document.getElementById('mailTxt');
+    const done = () => { label.textContent = 'Email copied'; setTimeout(() => { label.textContent = txt; }, 1800); };
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents(label); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); };
+    try { navigator.clipboard.writeText(txt).then(done, fallback); } catch (e) { fallback(); }
+  });
+
+  function tick(now) {
+    const dur = +slides[i].dataset.t || 11000;
+    let p = 1;
+    if (playing) {
+      p = Math.min(1, (now - t0) / dur);
+      if (p >= 1) { if (i < n - 1) go(i + 1, false); else setPlaying(false); p = 0; }
+    }
+    barEl.style.width = ((i + p) / n * 100).toFixed(2) + '%';
+    requestAnimationFrame(tick);
+  }
+
+  const m = /^#slide-(\d+)$/.exec(location.hash);
+  go(m ? (+m[1] - 1) : 0, false);
+  setTimeout(() => hint.classList.add('gone'), 9000);
+  requestAnimationFrame(tick);
+})();
+</script>
+
+</body></html>
